@@ -47,7 +47,7 @@ def new_logic():
                'book_tags': None}
     
     catalog['books'] = # TODO Implementar la inicialización de la lista de libros
-    catalog['authors']= lt.new_list(cmpfunction=compare_authors, module="SINGLE_LINKED", key=None)
+    catalog['authors']= lt.new_list()
     catalog['tags']=  #TODO Implementar la inicialización de la lista de tags
     catalog['book_tags'] = # TODO Implementar la inicialización de la lista de asociación de libros y tags
     return catalog
@@ -111,7 +111,7 @@ def get_books_by_author(catalog, author_name):
     """
     Retrona los libros de un autor
     """
-    pos_author = lt.is_present(catalog['authors'], author_name)
+    pos_author =pos_author = lt.is_present(catalog['authors'], author_name,compare_authors)
     if pos_author > 0:
         author = lt.get_element(catalog['authors'], pos_author)
         return author
@@ -121,7 +121,7 @@ def get_book_info_by_book_id(catalog, book_id):
     """
     Retorna toda la informacion que se tenga almacenada de un libro segun su titulo.
     """
-    pos_book = lt.is_present(catalog['books'], book_id)
+    pos_book =  lt.is_present(catalog['books'], book_id, compare_book_ids)
     if pos_book > 0:
         book = lt.get_element(catalog['books'], pos_book)
         return book
@@ -158,7 +158,7 @@ def add_book_author(catalog, author_name, book):
     a los libros de dicho autor
     """
     authors = catalog['authors']
-    pos_author = lt.is_present(authors, author_name)
+    pos_author = lt.is_present(authors, author_name,compare_authors)
     if pos_author > 0:
         author = lt.get_element(authors, pos_author)
     else:
@@ -195,7 +195,7 @@ def new_author(name):
     """
     author = {'name': "", "books": None,  "average_rating": 0}
     author['name'] = name
-    author['books'] = lt.new_list(cmpfunction=compare_authors, module="SINGLE_LINKED", key=None)
+    author['books'] = lt.new_list()
     return author
 
 
