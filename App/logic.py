@@ -115,7 +115,7 @@ def load_books_to_read(catalog):
     """
     Carga la información del archivo to_read y los agrega a la lista de libros por leer
     """
-    # TODO Implementar la carga de los libros por leer
+    # TODO Implementar la carga de los libros por leer del archivo to_read
     return books_to_read_size(catalog)
 
 # Funciones de consulta sobre el catálogo
@@ -127,7 +127,7 @@ def get_books_stack_by_user(catalog, user_id):
     """
     books_stack = st.new_stack()
 
-    # TODO Completar la función que retorna los libros por leer de un usuario
+    # TODO Completar la función que retorna los libros por leer de un usuario. Se debe usar el TAD Pila para resolver el requerimiento
 
     return books_stack
 
@@ -138,7 +138,7 @@ def get_user_position_on_queue(catalog, user_id, book_id):
     """
     queue = q.new_queue()
 
-    # TODO Completar la función que retorna la posición de un usuario en la cola para leer un libro
+    # TODO Completar la función que retorna la posición de un usuario en la cola para leer un libro. Se debe usar el TAD Cola para resolver el requerimiento.
 
     return position
 
