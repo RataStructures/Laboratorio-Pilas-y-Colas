@@ -36,6 +36,7 @@ data_dir = os.path.dirname(os.path.realpath('__file__')) + '/Data/'
 El controlador se encarga de mediar entre la vista y el modelo.
 """
 
+
 def new_logic():
     """
     Inicializa el catálogo de libros. Crea una lista vacia para guardar
@@ -49,12 +50,13 @@ def new_logic():
                'book_tags': None,
                'books_to_read': None,
                'book_sublist': None}
-    
+
     catalog['books'] = lt.new_list()
-    catalog['authors']= lt.new_list()
-    catalog['tags']=  lt.new_list()
+    catalog['authors'] = lt.new_list()
+    catalog['tags'] = lt.new_list()
     catalog['book_tags'] = lt.new_list()
-    catalog['books_to_read'] = # TODO Implementar la inicialización de la lista de asociación de libros y tags
+    # TODO Implementar la inicialización de la lista de asociación de libros y tags
+    catalog['books_to_read'] = None
     catalog["book_sublist"] = None
     return catalog
 
@@ -71,7 +73,8 @@ def load_data(catalog):
     tag_size = load_tags(catalog)
     book_tag_size = load_books_tags(catalog)
     # TODO Cargar los datos de libros para leer
-    return books, authors,tag_size,book_tag_size, books_to_read
+    return books, authors, tag_size, book_tag_size, books_to_read
+
 
 def load_books(catalog):
     """
@@ -96,6 +99,7 @@ def load_tags(catalog):
         add_tag(catalog, tag)
     return tag_size(catalog)
 
+
 def load_books_tags(catalog):
     """
     Carga la información que asocia tags con libros.
@@ -106,6 +110,7 @@ def load_books_tags(catalog):
         add_book_tag(catalog, booktag)
     return book_tag_size(catalog)
 
+
 def load_books_to_read(catalog):
     """
     Carga la información del archivo to_read y los agrega a la lista de libros por leer
@@ -114,6 +119,7 @@ def load_books_to_read(catalog):
     return books_to_read_size(catalog)
 
 # Funciones de consulta sobre el catálogo
+
 
 def get_books_stack_by_user(catalog, user_id):
     """
@@ -125,17 +131,19 @@ def get_books_stack_by_user(catalog, user_id):
 
     return books_stack
 
+
 def get_user_position_on_queue(catalog, user_id, book_id):
     """
     Retorna la posición de un usuario en la cola para leer un libro.
     """
     queue = q.new_queue()
-    
+
     # TODO Completar la función que retorna la posición de un usuario en la cola para leer un libro
 
     return position
 
 # Funciones para agregar informacion al catalogo
+
 
 def add_book(catalog, book):
     # Se adiciona el libro a la lista de libros
@@ -156,7 +164,7 @@ def add_book_author(catalog, author_name, book):
     a los libros de dicho autor
     """
     authors = catalog['authors']
-    pos_author = lt.is_present(authors, author_name,compare_authors)
+    pos_author = lt.is_present(authors, author_name, compare_authors)
     if pos_author > 0:
         author = lt.get_element(authors, pos_author)
     else:
@@ -179,9 +187,11 @@ def add_book_tag(catalog, book_tag):
     """
     Adiciona un tag a la lista de tags
     """
-    t = new_book_tag(book_tag['tag_id'], book_tag['goodreads_book_id'], book_tag['count'])
+    t = new_book_tag(book_tag['tag_id'],
+                     book_tag['goodreads_book_id'], book_tag['count'])
     lt.add_last(catalog['book_tags'], t)
     return catalog
+
 
 def add_book_to_read(catalog, book_to_read):
     """
@@ -192,6 +202,7 @@ def add_book_to_read(catalog, book_to_read):
     return catalog
 
 # Funciones para creacion de datos
+
 
 def new_author(name):
     """
@@ -219,8 +230,9 @@ def new_book_tag(tag_id, book_id, count):
     Esta estructura crea una relación entre un tag y
     los libros que han sido marcados con dicho tag.
     """
-    book_tag = {'tag_id': tag_id, 'book_id': book_id,'count':count}
+    book_tag = {'tag_id': tag_id, 'book_id': book_id, 'count': count}
     return book_tag
+
 
 def new_book_to_read(user_id, book_id):
     """
@@ -230,23 +242,29 @@ def new_book_to_read(user_id, book_id):
     book_to_read = {'user_id': user_id, 'book_id': book_id}
     return book_to_read
 
+
 def book_size(catalog):
     return lt.size(catalog['books'])
+
 
 def author_size(catalog):
     return lt.size(catalog["authors"])
 
+
 def tag_size(catalog):
     return lt.size(catalog["tags"])
+
 
 def book_tag_size(catalog):
     return lt.size(catalog["book_tags"])
 
+
 def books_to_read_size(catalog):
     # TODO Implementar la función que retorna el tamaño de la lista de libros por leer
-
+    pass
 
 # Funciones utilizadas para comparar elementos dentro de una lista
+
 
 def compare_authors(author_name1, author):
     if author_name1.lower() == author['name'].lower():
@@ -268,9 +286,10 @@ def set_book_sublist(catalog, size):
     """
     Crea una sublista de libros de tamaño size
     """
-    algo = lt.sub_list(catalog["books"], 0, size) 
+    algo = lt.sub_list(catalog["books"], 0, size)
     catalog["book_sublist"] = algo
     return catalog
+
 
 def get_time():
     """
@@ -291,9 +310,9 @@ def measure_queue_performance(catalog):
     """
     Mide el desempeño de las operaciones de la cola
     """
-    
+
     queue = q.new_queue()
-    
+
     # Medir enqueue
     start_time = get_time()
     for pos in range(lt.size(catalog["book_sublist"])):
@@ -301,7 +320,7 @@ def measure_queue_performance(catalog):
         q.enqueue(queue, book)
     end_time = get_time()
     enqueue_time = delta_time(start_time, end_time)
-    
+
     # Medir peek
     start_time = get_time()
     next = q.peek(queue)
@@ -314,24 +333,25 @@ def measure_queue_performance(catalog):
         q.dequeue(queue)
     end_time = get_time()
     dequeue_time = delta_time(start_time, end_time)
-    
+
     return {
         "enqueue_time": enqueue_time,
         "peek_time": peek_time,
         "dequeue_time": dequeue_time
     }
 
+
 def measure_stack_performance(catalog):
     """
     Mide el desempeño de las operaciones de la pila
     """
-    
+
     stack = st.new_stack()
 
     # Medir push
     start_time = get_time()
     # TODO Implementar la medición de tiempo para la operación push
-    
+
     # Medir top
     start_time = get_time()
     # TODO Implementar la medición de tiempo para la operación top
@@ -340,7 +360,7 @@ def measure_stack_performance(catalog):
 
     # Medir dequeue
     # TODO Implementar la medición de tiempo para la operación pop
-    
+
     return {
         "push_time": push_time,
         "top_time": top_time,

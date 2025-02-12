@@ -117,6 +117,7 @@ Este programa se distribuye con la esperanza de que sea útil, pero SIN NINGUNA 
 - [Dario Correal][dariocorreal-url] es el autor original y desarrollador principal de la librería.
 - [Santiago Arteaga][phillipus85-url] es colaborador y administrador de repositorios.
 - [Luis Florez][le99-url] es colaborador y desarrolló los ejemplos y tutoriales para la librería.
+- [Juan Castro][jpcastroa1-url] es colaborador y desarrolló la última versión de la actividad.
 
 [Volver al inicio](#laboratorio-4)
 
@@ -131,6 +132,7 @@ Este programa se distribuye con la esperanza de que sea útil, pero SIN NINGUNA 
 [dariocorreal-url]: https://github.com/dariocorreal
 [phillipus85-url]: https://github.com/phillipus85
 [le99-url]: https://github.com/le99
+[jpcastroa1-url]: https://github.com/jpcastroa1
 [laboratorio-4-contributors-shield]: https://img.shields.io/github/contributors/ISIS1225DEVS/ISIS1225-Laboratorio-4.svg?style=for-the-badge
 [laboratorio-4-contributors-url]: https://github.com/ISIS1225DEVS/ISIS1225-Laboratorio-4/graphs/contributors
 [laboratorio-4-forks-shield]: https://img.shields.io/github/forks/ISIS1225DEVS/ISIS1225-Laboratorio-4.svg?style=for-the-badge

@@ -2,17 +2,20 @@
 from DataStructures.Stack import stack as stack
 from DataStructures.Utils.utils import handle_not_implemented
 
+
 def setup_stack():
     # Inicializa una pila vacía para pruebas
     return stack.new_stack()
 
+
 @handle_not_implemented
 def test_new_stack():
-    #verifica que la pila esté vacía
+    # verifica que la pila esté vacía
     my_stack = stack.new_stack()
     assert stack.is_empty(my_stack) is True
     assert stack.size(my_stack) == 0
-    
+
+
 @handle_not_implemented
 def test_push():
     # Verifica que los elementos se agregan correctamente en la pila
@@ -24,10 +27,11 @@ def test_push():
     stack.push(my_stack, 20)
     assert stack.size(my_stack) == 2
     assert stack.top(my_stack) == 20
-    
+
+
 @handle_not_implemented
 def test_pop():
-     # Verifica que `pop` retira y devuelve el último elemento de la pila
+    # Verifica que `pop` retira y devuelve el último elemento de la pila
     my_stack = stack.new_stack()
     stack.push(my_stack, 10)
     stack.push(my_stack, 20)
@@ -38,7 +42,8 @@ def test_pop():
 
     assert stack.pop(my_stack) == 10
     assert stack.is_empty(my_stack) is True
-    
+
+
 @handle_not_implemented
 def test_is_empty():
     # Verifica si la pila detecta correctamente si está vacía o no
@@ -51,6 +56,7 @@ def test_is_empty():
     stack.pop(my_stack)
     assert stack.is_empty(my_stack) is True
 
+
 @handle_not_implemented
 def test_top():
     # Verifica que `top` devuelve el último elemento sin eliminarlo
@@ -59,11 +65,12 @@ def test_top():
     stack.push(my_stack, "B")
 
     assert stack.top(my_stack) == "B"
-    assert stack.size(my_stack) == 2  
-    
+    assert stack.size(my_stack) == 2
+
+
 @handle_not_implemented
 def test_size():
-     # Verifica que `size` devuelve el número correcto de elementos
+    # Verifica que `size` devuelve el número correcto de elementos
     my_stack = stack.new_stack()
     assert stack.size(my_stack) == 0
 

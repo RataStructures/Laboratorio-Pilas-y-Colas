@@ -26,7 +26,7 @@ def test_enqueue():
     q.enqueue(my_queue, 1)
 
     assert my_queue["size"] == 1
-    assert my_queue["elements"][-1] == 1  
+    assert my_queue["elements"][-1] == 1
 
 
 @handle_not_implemented
@@ -40,7 +40,7 @@ def test_dequeue():
 
     assert first_element == 10
     assert my_queue["size"] == 1
-    assert my_queue["elements"][0] == 20  
+    assert my_queue["elements"][0] == 20
 
 
 @handle_not_implemented
@@ -53,7 +53,7 @@ def test_peek():
     first_element = q.peek(my_queue)
 
     assert first_element == "A"
-    assert my_queue["size"] == 2  
+    assert my_queue["size"] == 2
 
 
 @handle_not_implemented
