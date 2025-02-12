@@ -74,9 +74,12 @@ def print_tests_results(queue_results, stack_results):
     """
     print("\nTiempos de ejecución para Cola: \n")
 
-    print("Tiempo de ejecución para enqueue:", f"{queue_results['enqueue_time']:.3f}", "[ms]")
-    print("Tiempo de ejecución para peek:", f"{queue_results['peek_time']:.3f}", "[ms]")
-    print("Tiempo de ejecución para dequeue:", f"{queue_results['dequeue_time']:.3f}", "[ms]")
+    print("Tiempo de ejecución para enqueue:",
+          f"{queue_results['enqueue_time']:.3f}", "[ms]")
+    print("Tiempo de ejecución para peek:",
+          f"{queue_results['peek_time']:.3f}", "[ms]")
+    print("Tiempo de ejecución para dequeue:",
+          f"{queue_results['dequeue_time']:.3f}", "[ms]")
 
     print("\nTiempos de ejecución para Pila: \n")
 
@@ -93,7 +96,7 @@ def main():
     Menu principal
     """
     working = True
-    #ciclo del menu
+    # ciclo del menu
     while working:
         print_menu()
         inputs = input('Seleccione una opción para continuar\n')
@@ -116,7 +119,8 @@ def main():
             user_id = input("Ingrese el id del usuario: ")
             book_id = input("Ingrese el id del libro: ")
 
-            result = logic.get_user_position_on_queue(control, int(user_id), int(book_id))
+            result = logic.get_user_position_on_queue(
+                control, int(user_id), int(book_id))
             # TODO Imprimir la posición del usuario en la cola
 
         elif int(inputs[0]) == 4:
