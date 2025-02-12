@@ -26,12 +26,10 @@
 
 import sys
 import App.logic as logic
-from DataStructures import List as lt
-
 
 """
 La vista se encarga de la interacción con el usuario
-Presenta el menu de opciones  y  por cada seleccion
+Presenta el menú de opciones y por cada selección
 se hace la solicitud al controlador para ejecutar la
 operación solicitada
 """
@@ -51,11 +49,9 @@ def print_menu():
     """
     print("Bienvenido")
     print("1- Cargar información en el catálogo")
-    print("2- Consultar la información de un libro")
-    print("3- Consultar los libros de un autor")
-    print("4- Libros por género")
-    print("5- Consultar los TOP n libros del catalogo")
-    print("6- Consultar el libro con mayor rating promedio")
+    print("2- Consultar la pila de libros por leer de un usuario")
+    print("3- Consultar la posición del usuario en la cola para leer un libro")
+    print("4- Ejecutar pruebas de rendimiento")
     print("0- Salir")
 
 
@@ -63,63 +59,29 @@ def load_data(control):
     """
     Solicita al controlador que cargue los datos en el modelo
     """
-    books, authors, tags, book_tags = logic.load_data(control)
-    return books, authors, tags, book_tags
+    books, authors, tags, book_tags, books_to_read = logic.load_data(control)
+    return books, authors, tags, book_tags, books_to_read
 
 
-def print_author_data(author):
-    """
-    Recorre la lista de libros de un autor, imprimiendo
-    la informacin solicitada.
-    """
-    if author:
-        print('Autor encontrado: ' + author['name'])
-        print('Promedio: ' + str(author['average_rating']))
-        print('Total de libros: ' + str(lt.size(author['books'])))
-        for book_pos in range(0, lt.size(author['books'])):
-            book = lt.get_element(author['books'], book_pos)
-            print('Titulo: ' + book['title'] + '  ISBN: ' + book['isbn'])
-    else:
-        print('No se encontro el autor')
+def print_books_to_read(results):
+    # TODO Imprimir los libros por leer
+    pass
 
-def print_book_info(book):
-    """
-    Imprime los mejores libros solicitados
-    """
-    if book:
-        print('Titulo: ' + book['title'] + '  ISBN: ' +
-                  book['isbn'] + ' Rating: ' + book['average_rating'] +
-                    ' Work text reviews count : ' + book['work_text_reviews_count'])
-    else:
-        print('No se encontraron libros')
 
-def print_first_and_last_books(first, last):
+def print_tests_results(queue_results, stack_results):
     """
-    Imprime los TOP n libros solicitados en la impresión
+    Imprime los resultados de las pruebas de rendimiento
     """
-    print("\nLos primeros libros de la lista son: \n")
-    for book in first:
-        print('Titulo: ' + book['title'] + '  ISBN: ' +
-                  book['isbn'] + ' Rating: ' + book['average_rating'] +
-                    ' Work text reviews count : ' + book['work_text_reviews_count'])
-        
-    print("\nLos ultimos libros de la lista son: \n")
-    for book in last:
-        print('Titulo: ' + book['title'] + '  ISBN: ' +
-                  book['isbn'] + ' Rating: ' + book['average_rating'] +
-                    ' Work text reviews count : ' + book['work_text_reviews_count'])
+    print("\nTiempos de ejecución para Cola: \n")
 
-def print_best_avg_rating_book(best_book):
-    """
-    Imprime la información del libro con el average rating más alto de los datos
-    """
-    print("\nEl libro con el mayor rating promedio es: \n")
+    print("Tiempo de ejecución para enqueue:", f"{queue_results['enqueue_time']:.3f}", "[ms]")
+    print("Tiempo de ejecución para peek:", f"{queue_results['peek_time']:.3f}", "[ms]")
+    print("Tiempo de ejecución para dequeue:", f"{queue_results['dequeue_time']:.3f}", "[ms]")
 
-    print('Titulo: ' + best_book['title'] + '  ISBN: ' +
-                  best_book['isbn'] + ' Work text reviews count : ' + 
-                  best_book['work_text_reviews_count'] + '\nCon un rating promedio de: ' + 
-                  best_book['average_rating'] )
-        
+    print("\nTiempos de ejecución para Pila: \n")
+
+    # TODO Imprimir los resultados de las pruebas de rendimiento de la pila
+
 
 # Se crea el controlador asociado a la vista
 control = new_logic()
@@ -137,36 +99,35 @@ def main():
         inputs = input('Seleccione una opción para continuar\n')
         if int(inputs[0]) == 1:
             print("Cargando información de los archivos ....")
-            bk, at, tg, bktg = load_data(control)
+            bk, at, tg, bktg, tr = load_data(control)
             print('Libros cargados: ' + str(bk))
             print('Autores cargados: ' + str(at))
             print('Géneros cargados: ' + str(tg))
+            print('Libros por leer cargados: ' + str(tr))
             print('Asociación de Géneros a Libros cargados: ' +
                   str(bktg))
 
         elif int(inputs[0]) == 2:
-            number = input("Ingrese el id del libro que desea buscar: ")
-            book = logic.get_book_info_by_book_id(control, int(number))
-            print_book_info(book)
+            user_id = input("Ingrese el id del usuario: ")
+            result = logic.get_books_stack_by_user(control, int(user_id))
+            print_books_to_read(result)
 
         elif int(inputs[0]) == 3:
-            authorname = input("Nombre del autor a buscar: ")
-            author = logic.get_books_by_author(control, authorname)
-            print_author_data(author)
+            user_id = input("Ingrese el id del usuario: ")
+            book_id = input("Ingrese el id del libro: ")
+
+            result = logic.get_user_position_on_queue(control, int(user_id), int(book_id))
+            # TODO Imprimir la posición del usuario en la cola
 
         elif int(inputs[0]) == 4:
-            label = input("Etiqueta a buscar: ")
-            book_count = logic.count_books_by_tag(control, label)
-            print('Se encontraron: ', book_count, ' Libros')
-        
-        elif int(inputs[0]) == 5:
-            top = int(input("Ingrese el número de libros que desea imprimir: "))
-            first, last = logic.get_first_last_books(control, top)
-            print_first_and_last_books(first,last)
+            size = input("Indique tamaño de la muestra: ")
+            size = int(size)
+            logic.set_book_sublist(control, size)
 
-        elif int(inputs[0]) == 6:
-            best_avg_rating = logic.get_best_avg_rating(control)
-            print_best_avg_rating_book(best_avg_rating)
+            print("Ejecutando pruebas de rendimiento...")
+            queue_result = logic.measure_queue_performance(control)
+            stack_result = logic.measure_stack_performance(control)
+            print_tests_results(queue_result, stack_result)
 
         elif int(inputs[0]) == 0:
             working = False
