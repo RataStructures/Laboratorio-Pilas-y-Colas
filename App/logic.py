@@ -1,36 +1,38 @@
 """
- * Copyright 2020, Departamento de sistemas y Computación,
- * Universidad de Los Andes
- *
- *
- * Desarrollado para el curso ISIS1225 - Estructuras de Datos y Algoritmos
- *
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along withthis program.  If not, see <http://www.gnu.org/licenses/>.
- *
- * Contribuciones
- *
- * Dario Correal
- """
+* Copyright 2020, Departamento de sistemas y Computación,
+* Universidad de Los Andes
+*
+*
+* Desarrollado para el curso ISIS1225 - Estructuras de Datos y Algoritmos
+*
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along withthis program.  If not, see <http://www.gnu.org/licenses/>.
+*
+* Contribuciones
+*
+* Dario Correal
+"""
 
 import csv
 import os
 import time
 from DataStructures.List import array_list as lt
-# TODO Importar las librerías correspondientes para el manejo de pilas y colas
+from DataStructures.Stack import stack as st
+from DataStructures.Queue import queue as q
 
-data_dir = os.path.dirname(os.path.realpath('__file__')) + '/Data/'
+
+data_dir = os.path.dirname(os.path.realpath("__file__")) + "/Data/"
 
 """
 El controlador se encarga de mediar entre la vista y el modelo.
@@ -44,20 +46,21 @@ def new_logic():
     una lista vacia para los generos y una lista vacia para la asociación
     generos y libros. Retorna el catalogo inicializado.
     """
-    catalog = {'books': None,
-               'authors': None,
-               'tags': None,
-               'book_tags': None,
-               'books_to_read': None,
-               'book_sublist': None}
+    catalog = {
+        "books": None,
+        "authors": None,
+        "tags": None,
+        "book_tags": None,
+        "books_to_read": None,
+        "book_sublist": None,
+    }
 
-    catalog['books'] = lt.new_list()
-    catalog['authors'] = lt.new_list()
-    catalog['tags'] = lt.new_list()
-    catalog['book_tags'] = lt.new_list()
-    # TODO Implementar la inicialización de la lista de asociación de libros y tags
-    catalog['books_to_read'] = None
-    catalog["book_sublist"] = None
+    catalog["books"] = lt.new_list()
+    catalog["authors"] = lt.new_list()
+    catalog["tags"] = lt.new_list()
+    catalog["book_tags"] = lt.new_list()
+    catalog["books_to_read"] = lt.new_list()
+    catalog["book_sublist"] = lt.new_list()
     return catalog
 
 
@@ -72,7 +75,7 @@ def load_data(catalog):
     books, authors = load_books(catalog)
     tag_size = load_tags(catalog)
     book_tag_size = load_books_tags(catalog)
-    # TODO Cargar los datos de libros para leer
+    books_to_read = load_books_to_read(catalog)
     return books, authors, tag_size, book_tag_size, books_to_read
 
 
@@ -82,8 +85,8 @@ def load_books(catalog):
     cada uno de ellos, se crea en la lista de autores, a dicho autor y una
     referencia al libro que se esta procesando.
     """
-    booksfile = data_dir + '/books.csv'
-    input_file = csv.DictReader(open(booksfile, encoding='utf-8'))
+    booksfile = data_dir + "/books.csv"
+    input_file = csv.DictReader(open(booksfile, encoding="utf-8"))
     for book in input_file:
         add_book(catalog, book)
     return book_size(catalog), author_size(catalog)
@@ -93,8 +96,8 @@ def load_tags(catalog):
     """
     Carga todos los tags del archivo y los agrega a la lista de tags
     """
-    tagsfile = data_dir + '/tags.csv'
-    input_file = csv.DictReader(open(tagsfile, encoding='utf-8'))
+    tagsfile = data_dir + "/tags.csv"
+    input_file = csv.DictReader(open(tagsfile, encoding="utf-8"))
     for tag in input_file:
         add_tag(catalog, tag)
     return tag_size(catalog)
@@ -104,8 +107,8 @@ def load_books_tags(catalog):
     """
     Carga la información que asocia tags con libros.
     """
-    bookstagsfile = data_dir + '/book_tags-small.csv'
-    input_file = csv.DictReader(open(bookstagsfile, encoding='utf-8'))
+    bookstagsfile = data_dir + "/book_tags-small.csv"
+    input_file = csv.DictReader(open(bookstagsfile, encoding="utf-8"))
     for booktag in input_file:
         add_book_tag(catalog, booktag)
     return book_tag_size(catalog)
@@ -115,8 +118,12 @@ def load_books_to_read(catalog):
     """
     Carga la información del archivo to_read y los agrega a la lista de libros por leer
     """
-    # TODO Implementar la carga de los libros por leer del archivo to_read
+    bookstoreadfile = data_dir + "/to_read.csv"
+    input_file = csv.DictReader(open(bookstoreadfile, encoding="utf-8"))
+    for book_to_read in input_file:
+        add_book_to_read(catalog, book_to_read)
     return books_to_read_size(catalog)
+
 
 # Funciones de consulta sobre el catálogo
 
@@ -126,9 +133,11 @@ def get_books_stack_by_user(catalog, user_id):
     Retorna una pila con los libros que un usuario tiene por leer.
     """
     books_stack = st.new_stack()
-
-    # TODO Completar la función que retorna los libros por leer de un usuario. Se debe usar el TAD Pila para resolver el requerimiento
-
+    books_to_read = catalog["books_to_read"]
+    for book_to_read in lt.iterator(books_to_read, 0, lt.size(books_to_read), 1):
+        add_book = compare_user_ids(user_id, book_to_read)
+        if add_book == 0:
+            books_stack = st.push(books_stack, book_to_read)
     return books_stack
 
 
@@ -136,11 +145,20 @@ def get_user_position_on_queue(catalog, user_id, book_id):
     """
     Retorna la posición de un usuario en la cola para leer un libro.
     """
-    queue = q.new_queue()
+    books_to_read, n, pos = (
+        catalog["books_to_read"],
+        lt.size(catalog["books_to_read"]),
+        -1,
+    )
+    for index in range(n):
+        book_to_read = lt.get_element(books_to_read, index)
+        is_book = compare_book_ids(book_id, book_to_read)
+        is_user = compare_user_ids(user_id, book_to_read)
+        if is_book == 0 and is_user == 0:
+            pos = index
+            break
+    return pos
 
-    # TODO Completar la función que retorna la posición de un usuario en la cola para leer un libro. Se debe usar el TAD Cola para resolver el requerimiento.
-
-    return position
 
 # Funciones para agregar informacion al catalogo
 
@@ -148,9 +166,9 @@ def get_user_position_on_queue(catalog, user_id, book_id):
 def add_book(catalog, book):
     # Se adiciona el libro a la lista de libros
     book["goodreads_book_id"] = int(book["goodreads_book_id"])
-    lt.add_last(catalog['books'], book)
+    lt.add_last(catalog["books"], book)
     # Se obtienen los autores del libro
-    authors = book['authors'].split(",")
+    authors = book["authors"].split(",")
     # Cada autor, se crea en la lista de libros del catalogo, y se
     # crea un libro en la lista de dicho autor (apuntador al libro)
     for author in authors:
@@ -163,14 +181,14 @@ def add_book_author(catalog, author_name, book):
     Adiciona un autor a lista de autores, la cual guarda referencias
     a los libros de dicho autor
     """
-    authors = catalog['authors']
+    authors = catalog["authors"]
     pos_author = lt.is_present(authors, author_name, compare_authors)
     if pos_author > 0:
         author = lt.get_element(authors, pos_author)
     else:
         author = new_author(author_name)
         lt.add_last(authors, author)
-    lt.add_last(author['books'], book)
+    lt.add_last(author["books"], book)
     return catalog
 
 
@@ -178,8 +196,8 @@ def add_tag(catalog, tag):
     """
     Adiciona un tag a la lista de tags
     """
-    t = new_tag(tag['tag_name'], tag['tag_id'])
-    lt.add_last(catalog['tags'], t)
+    t = new_tag(tag["tag_name"], tag["tag_id"])
+    lt.add_last(catalog["tags"], t)
     return catalog
 
 
@@ -187,9 +205,10 @@ def add_book_tag(catalog, book_tag):
     """
     Adiciona un tag a la lista de tags
     """
-    t = new_book_tag(book_tag['tag_id'],
-                     book_tag['goodreads_book_id'], book_tag['count'])
-    lt.add_last(catalog['book_tags'], t)
+    t = new_book_tag(
+        book_tag["tag_id"], book_tag["goodreads_book_id"], book_tag["count"]
+    )
+    lt.add_last(catalog["book_tags"], t)
     return catalog
 
 
@@ -197,9 +216,10 @@ def add_book_to_read(catalog, book_to_read):
     """
     Adiciona un libro a la lista de libros por leer
     """
-    t = new_book_to_read(book_to_read['user_id'], book_to_read['book_id'])
-    lt.add_last(catalog['books_to_read'], t)
+    t = new_book_to_read(book_to_read["user_id"], book_to_read["book_id"])
+    lt.add_last(catalog["books_to_read"], t)
     return catalog
+
 
 # Funciones para creacion de datos
 
@@ -209,9 +229,9 @@ def new_author(name):
     Crea una nueva estructura para modelar los libros de
     un autor y su promedio de ratings
     """
-    author = {'name': "", "books": None,  "average_rating": 0}
-    author['name'] = name
-    author['books'] = lt.new_list()
+    author = {"name": "", "books": None, "average_rating": 0}
+    author["name"] = name
+    author["books"] = lt.new_list()
     return author
 
 
@@ -219,9 +239,9 @@ def new_tag(name, id):
     """
     Esta estructura almancena los tags utilizados para marcar libros.
     """
-    tag = {'name': '', 'tag_id': ''}
-    tag['name'] = name
-    tag['tag_id'] = id
+    tag = {"name": "", "tag_id": ""}
+    tag["name"] = name
+    tag["tag_id"] = id
     return tag
 
 
@@ -230,7 +250,7 @@ def new_book_tag(tag_id, book_id, count):
     Esta estructura crea una relación entre un tag y
     los libros que han sido marcados con dicho tag.
     """
-    book_tag = {'tag_id': tag_id, 'book_id': book_id, 'count': count}
+    book_tag = {"tag_id": tag_id, "book_id": book_id, "count": count}
     return book_tag
 
 
@@ -239,12 +259,12 @@ def new_book_to_read(user_id, book_id):
     Esta estructura crea una relación entre un tag y
     los libros que han sido marcados con dicho tag.
     """
-    book_to_read = {'user_id': user_id, 'book_id': book_id}
+    book_to_read = {"user_id": user_id, "book_id": book_id}
     return book_to_read
 
 
 def book_size(catalog):
-    return lt.size(catalog['books'])
+    return lt.size(catalog["books"])
 
 
 def author_size(catalog):
@@ -260,24 +280,40 @@ def book_tag_size(catalog):
 
 
 def books_to_read_size(catalog):
-    # TODO Implementar la función que retorna el tamaño de la lista de libros por leer
-    pass
+    return lt.size(catalog["books_to_read"])
+
 
 # Funciones utilizadas para comparar elementos dentro de una lista
 
 
 def compare_authors(author_name1, author):
-    if author_name1.lower() == author['name'].lower():
+    if author_name1.lower() == author["name"].lower():
         return 0
-    elif author_name1.lower() > author['name'].lower():
+    elif author_name1.lower() > author["name"].lower():
+        return 1
+    return -1
+
+
+def compare_book_ids(book_id1, book):
+    if book_id1 == int(book["book_id"]):
+        return 0
+    elif book_id1 > int(book["book_id"]):
+        return 1
+    return -1
+
+
+def compare_user_ids(user_id, book_to_read):
+    if user_id == int(book_to_read["user_id"]):
+        return 0
+    elif user_id > int(book_to_read["user_id"]):
         return 1
     return -1
 
 
 def compare_tag_names(name, tag):
-    if (name == tag['name']):
+    if name == tag["name"]:
         return 0
-    elif (name > tag['name']):
+    elif name > tag["name"]:
         return 1
     return -1
 
@@ -295,7 +331,7 @@ def get_time():
     """
     devuelve el instante tiempo de procesamiento en milisegundos
     """
-    return float(time.perf_counter()*1000)
+    return float(time.perf_counter() * 1000)
 
 
 def delta_time(start, end):
@@ -315,9 +351,10 @@ def measure_queue_performance(catalog):
 
     # Medir enqueue
     start_time = get_time()
-    for pos in range(lt.size(catalog["book_sublist"])):
-        book = lt.get_element(catalog["book_sublist"], pos)
-        q.enqueue(queue, book)
+    for book in lt.iterator(
+        catalog["book_sublist"], 0, lt.size(catalog["book_sublist"]), 1
+    ):
+        queue = q.enqueue(queue, book)
     end_time = get_time()
     enqueue_time = delta_time(start_time, end_time)
 
@@ -330,14 +367,14 @@ def measure_queue_performance(catalog):
     # Medir dequeue
     start_time = get_time()
     while not q.is_empty(queue):
-        q.dequeue(queue)
+        peek = q.dequeue(queue)
     end_time = get_time()
     dequeue_time = delta_time(start_time, end_time)
 
     return {
         "enqueue_time": enqueue_time,
         "peek_time": peek_time,
-        "dequeue_time": dequeue_time
+        "dequeue_time": dequeue_time,
     }
 
 
@@ -350,19 +387,23 @@ def measure_stack_performance(catalog):
 
     # Medir push
     start_time = get_time()
-    # TODO Implementar la medición de tiempo para la operación push
+    for book in lt.iterator(
+        catalog["book_sublist"], 0, lt.size(catalog["book_sublist"]), 1
+    ):
+        stack = st.push(stack, book)
+    end_time = get_time()
+    push_time = delta_time(start_time, end_time)
 
     # Medir top
     start_time = get_time()
-    # TODO Implementar la medición de tiempo para la operación top
+    top = st.top(stack)
     end_time = get_time()
     top_time = delta_time(start_time, end_time)
 
     # Medir dequeue
-    # TODO Implementar la medición de tiempo para la operación pop
-
-    return {
-        "push_time": push_time,
-        "top_time": top_time,
-        "pop_time": pop_time
-    }
+    start_time = get_time()
+    while not st.is_empty(stack):
+        top = st.pop(stack)
+    end_time = get_time()
+    pop_time = delta_time(start_time, end_time)
+    return {"push_time": push_time, "top_time": top_time, "pop_time": pop_time}

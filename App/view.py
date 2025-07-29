@@ -1,31 +1,32 @@
 """
- * Copyright 2020, Departamento de sistemas y Computación, Universidad
- * de Los Andes
- *
- *
- * Desarrollado para el curso ISIS1225 - Estructuras de Datos y Algoritmos
- *
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along withthis program.  If not, see <http://www.gnu.org/licenses/>.
- *
- * Contribuciones
- *
- * Dario Correal
- """
+* Copyright 2020, Departamento de sistemas y Computación, Universidad
+* de Los Andes
+*
+*
+* Desarrollado para el curso ISIS1225 - Estructuras de Datos y Algoritmos
+*
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along withthis program.  If not, see <http://www.gnu.org/licenses/>.
+*
+* Contribuciones
+*
+* Dario Correal
+"""
 
 import sys
 import App.logic as logic
+from DataStructures.Stack import stack as st
 
 """
 La vista se encarga de la interacción con el usuario
@@ -64,8 +65,22 @@ def load_data(control):
 
 
 def print_books_to_read(results):
-    # TODO Imprimir los libros por leer
-    pass
+    if st.is_empty(results):
+        print("No hay libros por leer en la pila.")
+    else:
+        print(f"Tamaño de la pila: {st.size(results)}")
+        print("Pila de libros por leer:")
+        for book_to_read in st.iterator(results, 0, st.size(results), 1):
+            print(f"\tId Libro por leer: {book_to_read['book_id']}")
+
+
+def print_position_on_queue(position):
+    if position == -1:
+        print("El usuario no está en la cola para leer el libro.")
+    else:
+        print(
+            f"El usuario está en la posición {position} de la cola para leer el libro."
+        )
 
 
 def print_tests_results(queue_results, stack_results):
@@ -74,16 +89,23 @@ def print_tests_results(queue_results, stack_results):
     """
     print("\nTiempos de ejecución para Cola: \n")
 
-    print("Tiempo de ejecución para enqueue:",
-          f"{queue_results['enqueue_time']:.3f}", "[ms]")
-    print("Tiempo de ejecución para peek:",
-          f"{queue_results['peek_time']:.3f}", "[ms]")
-    print("Tiempo de ejecución para dequeue:",
-          f"{queue_results['dequeue_time']:.3f}", "[ms]")
+    print(
+        "Tiempo de ejecución para enqueue:",
+        f"{queue_results['enqueue_time']:.3f}",
+        "[ms]",
+    )
+    print("Tiempo de ejecución para peek:", f"{queue_results['peek_time']:.3f}", "[ms]")
+    print(
+        "Tiempo de ejecución para dequeue:",
+        f"{queue_results['dequeue_time']:.3f}",
+        "[ms]",
+    )
 
     print("\nTiempos de ejecución para Pila: \n")
 
-    # TODO Imprimir los resultados de las pruebas de rendimiento de la pila
+    print("Tiempo de ejecución para push:", f"{stack_results['push_time']:.3f}", "[ms]")
+    print("Tiempo de ejecución para top:", f"{stack_results['top_time']:.3f}", "[ms]")
+    print("Tiempo de ejecución para pop:", f"{stack_results['pop_time']:.3f}", "[ms]")
 
 
 # Se crea el controlador asociado a la vista
@@ -99,16 +121,15 @@ def main():
     # ciclo del menu
     while working:
         print_menu()
-        inputs = input('Seleccione una opción para continuar\n')
+        inputs = input("Seleccione una opción para continuar\n")
         if int(inputs[0]) == 1:
             print("Cargando información de los archivos ....")
             bk, at, tg, bktg, tr = load_data(control)
-            print('Libros cargados: ' + str(bk))
-            print('Autores cargados: ' + str(at))
-            print('Géneros cargados: ' + str(tg))
-            print('Libros por leer cargados: ' + str(tr))
-            print('Asociación de Géneros a Libros cargados: ' +
-                  str(bktg))
+            print("Libros cargados: " + str(bk))
+            print("Autores cargados: " + str(at))
+            print("Géneros cargados: " + str(tg))
+            print("Libros por leer cargados: " + str(tr))
+            print("Asociación de Géneros a Libros cargados: " + str(bktg))
 
         elif int(inputs[0]) == 2:
             user_id = input("Ingrese el id del usuario: ")
@@ -120,8 +141,9 @@ def main():
             book_id = input("Ingrese el id del libro: ")
 
             result = logic.get_user_position_on_queue(
-                control, int(user_id), int(book_id))
-            # TODO Imprimir la posición del usuario en la cola
+                control, int(user_id), int(book_id)
+            )
+            print_position_on_queue(result)
 
         elif int(inputs[0]) == 4:
             size = input("Indique tamaño de la muestra: ")
